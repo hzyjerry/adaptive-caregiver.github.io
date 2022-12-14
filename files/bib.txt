@@ -1,0 +1,8 @@
+@inproceedings{
+  he2022learning,
+  title={Learning Representations that Enable Generalization in Assistive Tasks},
+  author={Jerry Zhi-Yang He and Zackory Erickson and Daniel S. Brown and Aditi Raghunathan and Anca Dragan},
+  booktitle={6th Annual Conference on Robot Learning},
+  year={2022},
+  url={https://openreview.net/forum?id=b88HF4vd_ej}
+}

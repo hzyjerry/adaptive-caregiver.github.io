@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GDXSC5Y2BD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GDXSC5Y2BD');
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<script src="./files/head.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<meta name="keywords" content="Berkeley,Deep,Reinforcement,Learning,Computer Science,Machine,Artificial,Intelligence">
+
+<article class="post-content">
+  <meta name="twitter:title" content="Offline Reinforcement Learning as One Big Sequence Modeling Problem"/>
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://people.eecs.berkeley.edu/~janner/trajectory-transformer/images/humanoid_padded.png" />
+<article class="post-content">
+
+<title>Reinforcement Learning as One Big Sequence Modeling Problem</title>
+<link rel="stylesheet" href="./files/font.css">
+<link rel="stylesheet" href="./files/main.css">
+
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
+<style>
+body {
+  font-family: "Computer Modern Serif", serif;
+  font-size: 14pt;
+}
+
+
+* {padding:0;margin:0;box-sizing:border-box;}
+#video {
+  position: relative;
+  padding-bottom: 45%; /* 16:9 */
+  height: 0;
+}
+#video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  height: 100%;
+  transform: translateX(12.5%);
+}
+
+</style>
+
+  <style type="text/css">/**
+ * Style sheet used by new LibX tooltip code
+ */
+
+/* We insert a <div> with libx-tooltip style under the body.
+ * This will inherit body's style - we can't afford to inherit undesirable
+ * styles and we must redefine what we need.  OTOH, some things, e.g.
+ * font-size, might be ok to be inherited to stay within the page's tone.
+ */
+.libx-tooltip {
+    display: none;
+    overflow: visible;
+    padding: 5px;
+    z-index: 100;
+    background-color: #eee;
+    color: #000;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    border: 2px solid #666;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.libx-tooltip p {
+    /* override default 1em margin to keep paragraphs inside a tooltip closer together. */
+    margin: .2em;
+}
+</style><style type="text/css">/**
+ * Style sheet used by LibX autolinking code
+ */
+.libx-autolink {
+}
+
+</style>
+
+</head>
+
+  <body>
+
+    <div class="outercontainer">
+      <div class="container">
+
+        <div class="content project_title">
+          <br>
+          <h2>Learning Representations that <br> Enable Generalization in Assistive Tasks</h2>
+          <div class="authors">
+            <a href="https://scholar.google.com/citations?user=lp8MBNwAAAAJ&hl=en">Jerry Zhi-Yang He</a>,
+            <a href="https://zackory.com/">Zackory Erickson</a>,
+            <a href="https://www.cs.utah.edu/~dsbrown/">Daniel S. Brown</a>,
+            <a href="https://www.cs.cmu.edu/~aditirag/">Aditi Raghunathan</a>, and
+            <a href="http://people.eecs.berkeley.edu/~anca/">Anca D. Dragan</a>
+          </div>
+          <div>
+            <span class="venue"><a href="https://corl2022.org/">CORL 2022</a></span>
+            <span class="tag">
+              <a href="https://arxiv.org/abs/2212.03175">Paper</a>&nbsp;
+              <a href="https://github.com/hzyjerry/adaptive-caregiver">Code</a>&nbsp;
+              <!-- <a href="https://bair.berkeley.edu/blog/2021/11/19/trajectory-transformer/">Blog</a>&nbsp; -->
+              <a href="files/bib.txt">BibTex</a>&nbsp;
+            </span>
+          </div>
+        </div>
+
+        <br>
+
+        <center>
+        <b><font size="4">PALM - Prediction-Based Assistive Latent eMbedding</font></b>
+        <br>
+        <video width=100% height=auto autoplay playsinline muted>
+          <source src="images/video_pull.mp4" type="video/mp4">
+        </video>
+        <!-- <img width=85% src="images/figure_pull.png"> -->
+        <i>Jointly learning the Latent Embedding and the robot policy. The resulting latent space captures <br> the underlying structure of the preferences and strategies of the training humans.</i>
+        </center>
+        <p>
+        <br>
+
+        <div class="content">
+          <div class="text">
+            <p>
+              <div class="title"><b>Summary</b></div>
+              In this work, we identify two principles as key to enabling better generalization. First is that we
+              benefit from learning a latent space of partners that distills their policies down to a structure that is
+              useful for the robot’s policy and that makes it easy to identify partners at test time. Second is that
+              we need to be prepared for this space to not perfectly capture the space of real human policies, and
+              design it so that it is adaptable with real test-time interaction data.
+          </p>
+          </div>
+        </div>
+        <br>
+        <br>
+
+        <center>
+          <img width=70% src="images/architecture.png">
+          <br>
+          <br>
+          &nbsp;
+        </center>
+
+        <div class="content">
+          <div class="text">
+            <p>
+              <div class="title"><b>Learning assistive latent space with action prediction loss</b></div>
+              Given interaction history of N robot observation and human action pairs, we embed this trajectory to a low-dimensional manifold and use it to predict the next human action. The intuition is that if we are able to predict it, we extract the sufficient information about the human's policy. Note that this does not require any supervision or prior information about the human's preferences, and can be trained with unsupervised learning.
+          </p>
+          <center>
+            <video width=35% height=auto autoplay playsinline muted>
+              <source src="images/toy_experiment.mp4" type="video/mp4">
+            </video>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img width=35% src="images/toy_latent.png">
+            <br>
+            <i>We recover the latent space of a toy environment in an unsupervised fashion <br> The kl coefficient to regularizes it to different degrees.</i>
+          </center>
+          <br>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="text">
+            <p>
+              <div class="title"><b>Test-time optimization</b></div>
+              <ul>
+                <li>At test time, as we work with a new user, we would like our encoding of the new user to match the true latent information of that user. In order to achieve that, we can optimize for the same action prediction objective for a few steps, which we refer to as <i>test time adaptation</i></li>
+                <br>
+                <center>
+                  <img width=80% src="images/toy_test_optimization.png">
+                </center>
+              </ul>
+          </p>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="text">
+            <p>
+              <div class="title"><b>Assistive Tasks</b></div>
+              <ul>
+                <li>We evaluate our method in assistive itch scratching task, where to goal is to scratch an unknown location. We generate synthetic humans by varying the itch locations and the amount of action penalties. We find that PALM is able to achive better performance on OOD humans.</li>
+                <br>
+                <center>
+                  <img width=80% src="images/assist_eval.png">
+                </center>
+                <br>
+                <li>We further investigate a prior method (RMA) and find that it fails to infer the underlying structure of the two arms and correctly embed OOD humans (red), whereas PALM successfully infers this latent structure.</li>
+                <br>
+                <center>
+                  <img width=60% src="images/assist_failure.png">
+                </center>
+              </ul>
+          </p>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="text">
+              <div class="title"><b>Learning Representations that Enable Generalization in Assistive Tasks</b></div>
+                 <div class="authors">
+                  <a href="https://scholar.google.com/citations?user=lp8MBNwAAAAJ&hl=en">Jerry Zhi-Yang He</a>,
+                  <a href="https://zackory.com/">Zackory Erickson</a>,
+                  <a href="https://www.cs.utah.edu/~dsbrown/">Daniel S. Brown</a>,
+                  <a href="https://www.cs.cmu.edu/~aditirag/">Aditi Raghunathan</a>, and
+                  <a href="http://people.eecs.berkeley.edu/~anca/">Anca D. Dragan</a>
+                </div>
+                  <span class="venue"><a href="https://corl2022.org/">CORL 2022</a></span>
+                  <span class="tag">
+                    <a href="https://arxiv.org/abs/2212.03175">Paper</a>&nbsp;
+                    <a href="https://github.com/hzyjerry/adaptive-caregiver">Code</a>&nbsp;
+                    <!-- <a href="https://bair.berkeley.edu/blog/2021/11/19/trajectory-transformer/">Blog</a>&nbsp; -->
+                    <a href="files/bib.txt">BibTex</a>&nbsp;
+                  </span>
+                </div>
+              </li>
+          </div>
+        </div>
+
+        <!-- <br><br><br>
+        <div class="content">
+          <div class="text">
+              <div class="title"><b>Related Publication</b></div>
+                Chen et al concurrently proposed another sequence modeling approach to reinforcement learning. At a high-level, ours is more model-based in spirit and theirs is more model-free, which allows us to evaluate Transformers as long-horizon dynamics models (<i>e.g.</i>, in the humanoid predictions above) and allows them to evaluate their policies in image-based environments (<i>e.g.</i>, Atari).
+                <a href="https://sites.google.com/berkeley.edu/decision-transformer">We encourage you to check out their work as well.</a>
+              </li>
+          </div>
+        </div> -->
+
+      </div>
+    </div>
+
+<br><br><br><br>
+
+
+</div></body></html>
